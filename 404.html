@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cotizador LYNX</title>
     <base href="/cotizador-lynx/" />
-    <link rel="stylesheet" href="css/app.css?v=20" />
+    <link rel="stylesheet" href="css/app.css?v=21" />
 </head>
 <body>
     <div id="app">
@@ -21,7 +21,7 @@
     </div>
 
     <script>
-        window.__APP_VER = "20";
+        window.__APP_VER = "21";
         (function () {
             var recargado = false;
             function recargar(motivo) {
@@ -30,14 +30,22 @@
                 var clave = "lynx_ver_reload_" + window.__APP_VER;
                 if (sessionStorage.getItem(clave)) return;
                 sessionStorage.setItem(clave, motivo);
-                location.replace(location.pathname + "?cb=" + Date.now());
+                location.replace(location.pathname + "?v=" + window.__APP_VER + "&cb=" + Date.now());
             }
-            fetch("version.txt", { cache: "no-store" })
-                .then(function (r) { return r.ok ? r.text() : null; })
-                .then(function (t) {
-                    if (t && t.trim() && t.trim() !== window.__APP_VER) recargar("version");
-                })
-                .catch(function () { });
+            function revisarVersion(motivo) {
+                return fetch("version.txt?t=" + Date.now(), { cache: "no-store" })
+                    .then(function (r) { return r.ok ? r.text() : null; })
+                    .then(function (t) {
+                        if (t && t.trim() && t.trim() !== window.__APP_VER) recargar(motivo);
+                    })
+                    .catch(function () { });
+            }
+            revisarVersion("version");
+            document.addEventListener("visibilitychange", function () {
+                if (!document.hidden) revisarVersion("volvio-a-la-pestana");
+            });
+            window.addEventListener("focus", function () { revisarVersion("foco"); });
+            setInterval(function () { revisarVersion("periodico"); }, 300000);
             setTimeout(function () {
                 var err = document.getElementById("blazor-error-ui");
                 var visible = err && err.style.display !== "none";
@@ -46,10 +54,10 @@
             }, 15000);
         })();
     </script>
-    <script src="js/jspdf.umd.min.js?v=20"></script>
-    <script src="js/pdf.js?v=20"></script>
-    <script src="js/fns.js?v=20"></script>
-    <script src="_framework/blazor.webassembly.js?v=20"></script>
+    <script src="js/jspdf.umd.min.js?v=21"></script>
+    <script src="js/pdf.js?v=21"></script>
+    <script src="js/fns.js?v=21"></script>
+    <script src="_framework/blazor.webassembly.js?v=21"></script>
 </body>
 </html>
 
