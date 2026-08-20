@@ -98,6 +98,12 @@ td input[type=number]::-webkit-outer-spin-button,
 td input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 td label.linea { font-size: 12px; gap: 4px; }
 
+
+.tabla-partidas th, .tabla-partidas td { padding-left: 7px; padding-right: 7px; }
+.tabla-partidas .celda-color button {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;
+}
+
 .aviso { padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 14px; }
 .aviso-error { background: #f7eceb; color: #8a2a1c; border: 1px solid #e6cdc9; }
 .aviso-ok { background: #ecf3ef; color: var(--ok); border: 1px solid #cdded4; }
