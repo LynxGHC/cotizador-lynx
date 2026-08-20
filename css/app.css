@@ -129,6 +129,13 @@ td label.linea { font-size: 12px; gap: 4px; }
 .tabla-scroll { scrollbar-color: #b8b8b8 #ededed; scrollbar-width: thin; }
 .celda-lados > input[type=number] { width: 68px; }
 
+.celda-fz > select { margin-bottom: 5px; }
+.fz-fila { display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+.fz-fila > span { font-size: 11px; color: var(--gris); width: 42px; flex-shrink: 0; }
+.fz-fila > input[type=number] { width: 56px; }
+.fz-fila label { display: flex; align-items: center; gap: 2px; font-size: 11px; color: var(--gris); }
+.fz-fila label input { width: 36px; }
+
 .lados { display: flex; gap: 5px; margin-top: 4px; }
 .lados label { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gris); }
 .lados input { width: 40px; }
