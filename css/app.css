@@ -99,6 +99,10 @@ td input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; mar
 td label.linea { font-size: 12px; gap: 4px; }
 
 
+.boton-chico.falta, .celda-color button.falta {
+    border-color: #c9564a; color: #a3392c; font-weight: 700; background: #fdf3f2;
+}
+
 .sello-version {
     position: fixed; bottom: 10px; right: 12px; z-index: 900;
     background: rgba(17,17,17,0.82); color: #fff;
@@ -111,6 +115,10 @@ td label.linea { font-size: 12px; gap: 4px; }
 .tabla-scroll::-webkit-scrollbar-track { background: #ededed; border-radius: 6px; }
 .tabla-scroll::-webkit-scrollbar-thumb { background: #b8b8b8; border-radius: 6px; }
 .tabla-scroll::-webkit-scrollbar-thumb:hover { background: #8f8f8f; }
+.boton-chico.falta, .celda-color button.falta {
+    border-color: #c9564a; color: #a3392c; font-weight: 700; background: #fdf3f2;
+}
+
 .sello-version {
     position: fixed; bottom: 10px; right: 12px; z-index: 900;
     background: rgba(17,17,17,0.82); color: #fff;
