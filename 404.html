@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cotizador LYNX</title>
+    <base href="/cotizador-lynx/" />
+    <link rel="stylesheet" href="css/app.css?v=3" />
+</head>
+<body>
+    <div id="app">
+        <div class="arranque">
+            <div class="arranque-marca">LYNX</div>
+            <div class="arranque-texto">Cargando el cotizador...</div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" style="display:none">
+        Ocurrió un error inesperado.
+        <a href="" class="reload">Recargar</a>
+    </div>
+
+    <script>
+        window.__APP_VER = "3";
+        (function () {
+            var recargado = false;
+            function recargar(motivo) {
+                if (recargado) return;
+                recargado = true;
+                var clave = "lynx_ver_reload_" + window.__APP_VER;
+                if (sessionStorage.getItem(clave)) return;
+                sessionStorage.setItem(clave, motivo);
+                location.replace(location.pathname + "?cb=" + Date.now());
+            }
+            fetch("version.txt", { cache: "no-store" })
+                .then(function (r) { return r.ok ? r.text() : null; })
+                .then(function (t) {
+                    if (t && t.trim() && t.trim() !== window.__APP_VER) recargar("version");
+                })
+                .catch(function () { });
+            setTimeout(function () {
+                var err = document.getElementById("blazor-error-ui");
+                var visible = err && err.style.display !== "none";
+                var arranque = document.querySelector("#app .arranque");
+                if (visible || arranque) recargar("timeout");
+            }, 15000);
+        })();
+    </script>
+    <script src="js/jspdf.umd.min.js"></script>
+    <script src="js/pdf.js?v=3"></script>
+    <script src="js/fns.js"></script>
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+</html>
+
