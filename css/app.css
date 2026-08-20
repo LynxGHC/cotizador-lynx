@@ -99,6 +99,10 @@ td input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; mar
 td label.linea { font-size: 12px; gap: 4px; }
 
 
+.lados { display: flex; gap: 5px; margin-top: 4px; }
+.lados label { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gris); }
+.lados input { width: 40px; }
+
 .tabla-partidas th, .tabla-partidas td { padding-left: 7px; padding-right: 7px; }
 .tabla-partidas .celda-color button {
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;
