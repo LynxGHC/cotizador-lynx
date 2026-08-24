@@ -134,7 +134,13 @@ td label.linea { font-size: 12px; gap: 4px; }
 .fz-fila > span { font-size: 11px; color: var(--gris); width: 42px; flex-shrink: 0; }
 .fz-fila > input[type=number] { width: 56px; }
 .fz-fila label { display: flex; align-items: center; gap: 2px; font-size: 11px; color: var(--gris); }
-.fz-fila label input { width: 36px; }
+.fz-fila label input[type=number] { width: 36px; }
+.fz-fila label input[type=checkbox] { width: auto; margin: 0 3px 0 0; }
+.fz-resumen { font-size: 11px; color: var(--gris); margin-top: 4px; font-style: italic; }
+
+.declive-libre { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.declive-libre label { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--gris); }
+.declive-libre input { width: 62px; }
 
 .lados { display: flex; gap: 5px; margin-top: 4px; }
 .lados label { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gris); }
