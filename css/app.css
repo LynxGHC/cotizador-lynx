@@ -142,6 +142,13 @@ td label.linea { font-size: 12px; gap: 4px; }
 .declive-libre label { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--gris); }
 .declive-libre input { width: 62px; }
 
+.tarifa-inline {
+    width: 74px; display: inline-block; vertical-align: baseline;
+    padding: 2px 6px; font-size: 13px; text-align: right;
+}
+.tarifa-inline:read-only { background: transparent; border-color: transparent; padding-left: 0; }
+.tarifa-signo { color: var(--gris); }
+
 .lados { display: flex; gap: 5px; margin-top: 4px; }
 .lados label { display: flex; align-items: center; gap: 3px; font-size: 11px; color: var(--gris); }
 .lados input { width: 40px; }
