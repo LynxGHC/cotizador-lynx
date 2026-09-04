@@ -110,9 +110,17 @@ window.lynxPdf = (function () {
 
     function partidas(doc, y, d) {
         doc.setFontSize(7.5);
+        // El aire se mide desde la ULTIMA linea de la descripcion, no desde el
+        // alto total de la fila. Con el alto total, una partida de una linea
+        // dejaba 5.5 mm hasta la raya y una de dos solo 3.9: el segundo
+        // renglon quedaba pegado al separador.
+        const CAIDA = 3.2;   // lo que baja cada linea despues de la primera
+        const AIRE = 5.5;    // ultima linea -> separador
+        const SIGUIENTE = 2; // separador -> primera linea de la fila que sigue
         for (const p of d.partidas) {
             const lineas = doc.splitTextToSize(p.descripcion || "", COL.pu - COL.desc - 4);
-            const alto = Math.max(lineas.length * 3.2, 5) + 2.5;
+            const altoTexto = (lineas.length - 1) * CAIDA;
+            const alto = altoTexto + AIRE + SIGUIENTE;
             if (y + alto > ALTO - M.abajo - 12) {
                 doc.addPage();
                 y = M.arriba + 6;
@@ -123,9 +131,10 @@ window.lynxPdf = (function () {
             doc.text(lineas, COL.desc, y);
             doc.text(dinero(p.pu), COL.pu + 20, y, { align: "right" });
             doc.text(dinero(p.total), COL.pt + 22, y, { align: "right" });
-            y += alto;
+            const separador = y + altoTexto + AIRE;
             doc.setDrawColor(226, 222, 219);
-            doc.line(M.izq, y - 2, FIN, y - 2);
+            doc.line(M.izq, separador, FIN, separador);
+            y = separador + SIGUIENTE;
         }
         return y;
     }
