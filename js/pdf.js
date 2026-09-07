@@ -10,6 +10,11 @@ window.lynxPdf = (function () {
             .toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // El monto siempre sale con simbolo y moneda: en un documento que mezcla
+    // dolares y pesos, un numero solo no dice en que esta.
+    function usd(n) { return "$" + dinero(n) + " USD"; }
+    function mxn(n) { return "$" + dinero(n) + " MXN"; }
+
     const LYNX = "data:image/png;base64,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";
     const LYNX_PROPORCION = 153 / 74;
 
@@ -95,8 +100,8 @@ window.lynxPdf = (function () {
         doc.rect(M.izq, y - 4, FIN - M.izq, 6, "F");
         doc.text("cant", COL.cant, y, { align: "right" });
         doc.text("descripcion", COL.desc, y);
-        doc.text("pu", COL.pu + 20, y, { align: "right" });
-        doc.text("pt", COL.pt + 22, y, { align: "right" });
+        doc.text("pu USD", COL.pu + 20, y, { align: "right" });
+        doc.text("pt USD", COL.pt + 22, y, { align: "right" });
         doc.setFont("helvetica", "normal");
         return y + 6;
     }
@@ -129,8 +134,8 @@ window.lynxPdf = (function () {
             }
             doc.text(String(p.cantidad), COL.cant, y, { align: "right" });
             doc.text(lineas, COL.desc, y);
-            doc.text(dinero(p.pu), COL.pu + 20, y, { align: "right" });
-            doc.text(dinero(p.total), COL.pt + 22, y, { align: "right" });
+            doc.text("$" + dinero(p.pu), COL.pu + 20, y, { align: "right" });
+            doc.text("$" + dinero(p.total), COL.pt + 22, y, { align: "right" });
             const separador = y + altoTexto + AIRE;
             doc.setDrawColor(226, 222, 219);
             doc.line(M.izq, separador, FIN, separador);
@@ -159,24 +164,24 @@ window.lynxPdf = (function () {
             y = M.arriba + 6;
         }
         y += 3;
-        y = renglon(doc, y, "subtotal", dinero(d.subtotal));
+        y = renglon(doc, y, "subtotal", usd(d.subtotal));
         if (d.conDescuento) {
             for (const s of d.descuentos) {
                 const pct = (Number(s.porcentaje) * 100).toFixed(2).replace(/\.00$/, "");
-                y = renglon(doc, y, s.concepto + " " + pct + " %", dinero(s.importe));
-                y = renglon(doc, y, "subtotal", dinero(s.subtotal));
+                y = renglon(doc, y, s.concepto + " " + pct + " %", usd(s.importe));
+                y = renglon(doc, y, "subtotal", usd(s.subtotal));
             }
         }
-        y = renglon(doc, y, "IVA", dinero(d.iva));
-        y = renglon(doc, y, "Total", dinero(d.totalUsd), { fuerte: true, prefijo: "Dolares" });
+        y = renglon(doc, y, "IVA", usd(d.iva));
+        y = renglon(doc, y, "Total", usd(d.totalUsd), { fuerte: true, prefijo: "Dolares" });
 
         if (Number(d.tipoCambio) > 0) {
             y = renglon(doc, y, "Tipo de cambio del dia " + d.fechaTipoCambio, Number(d.tipoCambio).toFixed(4));
-            y = renglon(doc, y, "Total en Pesos MX", dinero(d.totalMxn));
+            y = renglon(doc, y, "Total en Pesos MX", mxn(d.totalMxn));
             if (Number(d.fleteMxn) > 0) {
-                y = renglon(doc, y, "Flete y viaticos con IVA", dinero(d.fleteConIva));
+                y = renglon(doc, y, "Flete y viaticos con IVA", mxn(d.fleteConIva));
             }
-            y = renglon(doc, y, "Gran total en Pesos", dinero(d.granTotalMxn), { fuerte: true });
+            y = renglon(doc, y, "Gran total en Pesos", mxn(d.granTotalMxn), { fuerte: true });
         }
 
         y += 4;
@@ -185,7 +190,7 @@ window.lynxPdf = (function () {
             doc.setFont("helvetica", "normal");
             const t = "Flete y viaticos a " + (d.fleteDescripcion || "definir") + ".";
             doc.text(t, M.izq, y);
-            doc.text(dinero(d.fleteMxn) + "  M.N. + IVA", FIN, y, { align: "right" });
+            doc.text(mxn(d.fleteMxn) + " + IVA", FIN, y, { align: "right" });
             y += 6;
         }
         return y;
