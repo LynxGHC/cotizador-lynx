@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cotizador LYNX</title>
     <base href="/cotizador-lynx/" />
-    <link rel="stylesheet" href="css/app.css?v=46" />
+    <link rel="stylesheet" href="css/app.css?v=47" />
 </head>
 <body>
     <div id="app">
@@ -21,22 +21,38 @@
     </div>
 
     <script>
-        window.__APP_VER = "46";
+        window.__APP_VER = "47";
         (function () {
             var recargado = false;
-            function recargar(motivo) {
+            // Ojo con la version que se usa aca. Antes esta funcion tomaba
+            // window.__APP_VER, que es la version VIEJA que trajo el index.html
+            // cacheado, y eso rompia el auto-actualizador de dos formas:
+            //
+            //  1. la clave del sessionStorage llevaba la version vieja, asi que
+            //     despues de UN intento fallido ya no reintentaba nunca mas;
+            //  2. la URL de recarga tambien llevaba la version vieja, o sea la
+            //     MISMA URL que el navegador ya tenia en cache, y volvia a
+            //     servir el index.html viejo.
+            //
+            // Con la version nueva la URL cambia de verdad y el cache se salta.
+            function recargar(nueva, motivo) {
                 if (recargado) return;
                 recargado = true;
-                var clave = "lynx_ver_reload_" + window.__APP_VER;
+                var clave = "lynx_ver_reload_" + nueva;
                 if (sessionStorage.getItem(clave)) return;
                 sessionStorage.setItem(clave, motivo);
-                location.replace(location.pathname + "?v=" + window.__APP_VER + "&cb=" + Date.now());
+                location.replace(location.pathname + "?v=" + nueva + "&cb=" + Date.now());
             }
             function revisarVersion(motivo) {
                 return fetch("version.txt?t=" + Date.now(), { cache: "no-store" })
                     .then(function (r) { return r.ok ? r.text() : null; })
                     .then(function (t) {
-                        if (t && t.trim() && t.trim() !== window.__APP_VER) recargar(motivo);
+                        if (!t) return;
+                        // El version.txt se escribe con BOM. trim() ya lo saca
+                        // porque U+FEFF cuenta como espacio, pero lo quitamos
+                        // explicito para no depender de ese detalle.
+                        var nueva = t.replace(/^﻿/, "").trim();
+                        if (nueva && nueva !== window.__APP_VER) recargar(nueva, motivo);
                     })
                     .catch(function () { });
             }
@@ -50,15 +66,15 @@
                 var err = document.getElementById("blazor-error-ui");
                 var visible = err && err.style.display !== "none";
                 var arranque = document.querySelector("#app .arranque");
-                if (visible || arranque) recargar("timeout");
+                if (visible || arranque) recargar(window.__APP_VER, "timeout");
             }, 15000);
         })();
     </script>
-    <script src="js/jspdf.umd.min.js?v=46"></script>
-    <script src="js/pdf.js?v=46"></script>
-    <script src="js/excel.js?v=46"></script>
-    <script src="js/fns.js?v=46"></script>
-    <script src="_framework/blazor.webassembly.js?v=46"></script>
+    <script src="js/jspdf.umd.min.js?v=47"></script>
+    <script src="js/pdf.js?v=47"></script>
+    <script src="js/excel.js?v=47"></script>
+    <script src="js/fns.js?v=47"></script>
+    <script src="_framework/blazor.webassembly.js?v=47"></script>
 </body>
 </html>
 
