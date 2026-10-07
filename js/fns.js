@@ -15,6 +15,18 @@ window.lynxAviso = {
       if (activo) window.addEventListener("beforeunload", window.__lynxSalida);
       return true;
     } catch (e) { return false; }
+  },
+  // Trae el aviso a la vista. El boton de guardar esta al final de una pantalla
+  // muy larga y el aviso se pinta arriba del todo, asi que sin esto el mensaje
+  // ("se creo la revision tal") aparece a dos pantallas de donde se hizo clic
+  // y nadie lo lee.
+  mirar: function (id) {
+    try {
+      var el = document.getElementById(id);
+      if (!el) return false;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      return true;
+    } catch (e) { return false; }
   }
 };
 
