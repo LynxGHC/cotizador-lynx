@@ -267,11 +267,96 @@ window.lynxExcel = (function () {
         return { blob: zip(libro(nombre, xml)), archivo: d.archivo };
     }
 
+    /**
+     * La cotizacion en Excel. Es el mismo contenido que el PDF: la version de
+     * distribuidor lleva el desglose de descuentos y la de cliente no, igual
+     * que alla. Los importes van como NUMERO y no como texto, que es el punto
+     * de darlo en Excel: que se pueda sumar y filtrar.
+     */
+    function cotizacion(d) {
+        const f = [];
+        const conDesc = !!d.conDescuento;
+
+        f.push([{ v: "COTIZACION", s: 2 }, null, null, { v: d.folio || "", s: 2 }]);
+        f.push([]);
+        f.push([{ v: "FECHA:", s: 1 }, d.fecha || "",
+                { v: "VIGENCIA:", s: 1 }, (d.vigenciaDias || 0) + " dias"]);
+        f.push([{ v: "CLIENTE:", s: 1 }, d.cliente || ""]);
+        if (d.contacto) f.push([{ v: "CONTACTO:", s: 1 }, d.contacto]);
+        if (d.obra) f.push([{ v: "OBRA:", s: 1 }, d.obra]);
+        if (d.distribuidor) f.push([{ v: "DISTRIBUIDOR:", s: 1 }, d.distribuidor]);
+        f.push([]);
+
+        f.push([{ v: "CANT", s: 3 }, { v: "DESCRIPCION", s: 3 },
+                { v: "P. UNITARIO USD", s: 3 }, { v: "TOTAL USD", s: 3 }]);
+        for (const p of d.partidas) {
+            f.push([{ v: p.cantidad, s: 5 }, { v: p.descripcion, s: 4 },
+                    { v: p.pu, s: 5 }, { v: p.total, s: 5 }]);
+        }
+
+        f.push([]);
+        f.push([null, { v: "SUBTOTAL USD", s: 1 }, null, { v: d.subtotal, s: 5 }]);
+
+        // El cliente no ve como se armo el precio, solo el total. Es la misma
+        // regla que en el PDF.
+        if (conDesc) {
+            for (const x of d.descuentos) {
+                const nombre = (x.concepto || "Descuento")
+                    + " (" + redondear(x.porcentaje * 100, 2) + "%)";
+                f.push([null, { v: nombre, s: 0 }, null, { v: -x.importe, s: 5 }]);
+            }
+            if (d.descuentos.length) {
+                f.push([null, { v: "SUBTOTAL CON DESCUENTO", s: 1 }, null,
+                        { v: d.descuentos[d.descuentos.length - 1].subtotal, s: 5 }]);
+            }
+        }
+
+        f.push([null, { v: "IVA", s: 0 }, null, { v: d.iva, s: 5 }]);
+        f.push([null, { v: "TOTAL USD", s: 1 }, null, { v: d.totalUsd, s: 5 }]);
+
+        if (d.tipoCambio) {
+            f.push([]);
+            f.push([null, { v: "TIPO DE CAMBIO (" + (d.fechaTipoCambio || "") + ")", s: 0 },
+                    null, { v: d.tipoCambio, s: 5 }]);
+            f.push([null, { v: "TOTAL MXN", s: 1 }, null, { v: d.totalMxn, s: 5 }]);
+        }
+        if (d.fleteMxn) {
+            f.push([null, { v: "FLETE " + (d.fleteDescripcion || "") + " MXN", s: 0 },
+                    null, { v: d.fleteConIva || d.fleteMxn, s: 5 }]);
+            f.push([null, { v: "GRAN TOTAL MXN", s: 1 }, null, { v: d.granTotalMxn, s: 5 }]);
+        }
+
+        f.push([]);
+        if (d.tiempoEntrega) f.push([{ v: "TIEMPO DE ENTREGA:", s: 1 }, d.tiempoEntrega]);
+
+        if (d.condiciones && d.condiciones.length) {
+            f.push([]);
+            f.push([{ v: "CONDICIONES", s: 1 }]);
+            for (const c of d.condiciones) f.push([null, c]);
+        }
+
+        if (d.vendedor && d.vendedor.nombre) {
+            f.push([]);
+            f.push([{ v: "ATENDIO:", s: 1 }, d.vendedor.nombre]);
+            if (d.vendedor.puesto) f.push([null, d.vendedor.puesto]);
+            if (d.vendedor.telefono) f.push([null, d.vendedor.telefono]);
+            if (d.vendedor.email) f.push([null, d.vendedor.email]);
+        }
+
+        const xml = hoja("COTIZACION", f, [10, 80, 18, 16]);
+        return { blob: zip(libro("COTIZACION", xml)), archivo: d.archivo };
+    }
+
+    function redondear(n, dec) {
+        const k = Math.pow(10, dec);
+        return Math.round((Number(n) || 0) * k) / k;
+    }
+
     return {
         generar: function (json) {
             try {
                 const d = JSON.parse(json);
-                const r = documento(d);
+                const r = d.tipo === "cotizacion" ? cotizacion(d) : documento(d);
                 bajar(r.blob, r.archivo);
                 return true;
             } catch (e) {

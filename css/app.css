@@ -96,6 +96,48 @@ td input, td select { padding: 6px 7px; font-size: 13px; }
 td input[type=number] { -moz-appearance: textfield; appearance: textfield; text-align: right; }
 td input[type=number]::-webkit-outer-spin-button,
 td input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* Los contadores chicos (costados, ovalines, perforaciones, n de lavabos) SI
+   llevan flechas: son numeros de 0 a 3 que se ajustan de a uno, y buscarlos
+   con el teclado es mas lento que picar una flecha. Chrome por su cuenta solo
+   las muestra al pasar el mouse por encima; con esto quedan siempre a la vista. */
+td input[type=number].con-flechas {
+  -moz-appearance: auto;
+  appearance: auto;
+  text-align: right;
+  padding-right: 2px;
+}
+td input[type=number].con-flechas::-webkit-outer-spin-button,
+td input[type=number].con-flechas::-webkit-inner-spin-button {
+  -webkit-appearance: inner-spin-button;
+  opacity: 1;
+  margin: 0;
+}
+
+/* Flechas del CampoMedida. El campo es type="text" para aceptar la coma, asi
+   que el navegador no dibuja flechas y las ponemos nosotros. */
+.medida-con-paso { position: relative; display: inline-block; }
+.medida-con-paso > input { width: 100%; padding-right: 16px; }
+.medida-flechas {
+  position: absolute;
+  top: 1px; bottom: 1px; right: 1px;
+  width: 14px;
+  display: flex;
+  flex-direction: column;
+}
+.medida-flechas button {
+  flex: 1;
+  padding: 0;
+  border: 0;
+  background: #ececec;
+  color: #444;
+  font-size: 7px;
+  line-height: 1;
+  cursor: pointer;
+}
+.medida-flechas button:first-child { border-bottom: 1px solid #fff; }
+.medida-flechas button:hover { background: #d8d8d8; }
+.medida-flechas button:active { background: #c4c4c4; }
 td label.linea { font-size: 12px; gap: 4px; }
 
 
